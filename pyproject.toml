@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "code-diff"
+name = "code-diff-ast"
 version = "0.1.0"
 description = "Git diff to AST mapper CLI for LLM consumption"
 requires-python = ">=3.10"
