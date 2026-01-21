@@ -52,18 +52,22 @@ code-diff --stdout
 
 ## Output Format
 
-The tool outputs JSON with changes mapped to AST nodes:
+The tool outputs JSON with line-by-line diffs and AST-mapped changes:
 
 ```json
 {
-  "diff_mode": "commits",
+  "diff_type": "commits",
   "base_ref": "main",
   "target_ref": "HEAD",
   "files": [
     {
       "path": "src/example.py",
-      "status": "modified",
       "language": "python",
+      "status": "modified",
+      "diff": [
+        { "line": 45, "type": "delete", "content": "    return sum(items)" },
+        { "line": 45, "type": "add", "content": "    return sum(item.price for item in items)" }
+      ],
       "changes": [
         {
           "type": "function",
@@ -71,15 +75,18 @@ The tool outputs JSON with changes mapped to AST nodes:
           "line_start": 42,
           "line_end": 58,
           "change_type": "modified",
-          "diff_lines": [45, 47, 52],
+          "diff_lines": [45],
           "signature": "def calculate_total(items):",
-          "content": "..."
+          "content": "def calculate_total(items):\n    ..."
         }
       ]
     }
   ]
 }
 ```
+
+- **diff**: Line-by-line changes with actual content (works for all files)
+- **changes**: AST-mapped changes showing which functions/classes were modified (supported languages only)
 
 ## Supported Languages
 
