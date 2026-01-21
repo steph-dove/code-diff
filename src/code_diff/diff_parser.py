@@ -19,6 +19,7 @@ class ChangedLine:
     """A single changed line in a diff."""
     line_number: int  # Line number in the target (new) file
     is_addition: bool  # True for additions, False for deletions
+    content: str  # The actual line content
 
 
 @dataclass
@@ -69,11 +70,13 @@ def parse_diff(diff_text: str) -> list[FileChange]:
             for line in hunk:
                 if line.is_added:
                     line_num = line.target_line_no
-                    changed_lines.append(ChangedLine(line_number=line_num, is_addition=True))
+                    content = line.value.rstrip('\n')
+                    changed_lines.append(ChangedLine(line_number=line_num, is_addition=True, content=content))
                     added_lines.add(line_num)
                 elif line.is_removed:
                     line_num = line.source_line_no
-                    changed_lines.append(ChangedLine(line_number=line_num, is_addition=False))
+                    content = line.value.rstrip('\n')
+                    changed_lines.append(ChangedLine(line_number=line_num, is_addition=False, content=content))
                     deleted_lines.add(line_num)
 
         changes.append(FileChange(

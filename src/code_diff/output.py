@@ -6,8 +6,16 @@ from pathlib import Path
 from typing import Any
 
 from .ast_mapper import ASTNode
-from .diff_parser import FileChange, FileStatus
+from .diff_parser import FileChange, FileStatus, ChangedLine
 from .git import DiffMode
+
+
+@dataclass
+class LineDiffOutput:
+    """JSON-serializable line diff record."""
+    line: int
+    type: str  # "add" or "delete"
+    content: str
 
 
 @dataclass
@@ -30,8 +38,7 @@ class FileOutput:
     path: str
     language: str | None
     status: str
-    added_lines: list[int]
-    deleted_lines: list[int]
+    diff: list[LineDiffOutput]
     changes: list[ChangeOutput]
 
 
@@ -65,12 +72,19 @@ def create_file_output(
     ast_nodes: list[ASTNode],
 ) -> FileOutput:
     """Create a FileOutput from parsed data."""
+    diff = [
+        LineDiffOutput(
+            line=cl.line_number,
+            type="add" if cl.is_addition else "delete",
+            content=cl.content,
+        )
+        for cl in file_change.changed_lines
+    ]
     return FileOutput(
         path=str(file_change.path),
         language=language,
         status=file_change.status.value,
-        added_lines=sorted(file_change.added_line_numbers),
-        deleted_lines=sorted(file_change.deleted_line_numbers),
+        diff=diff,
         changes=[create_change_output(node) for node in ast_nodes],
     )
 
