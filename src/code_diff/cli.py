@@ -29,7 +29,7 @@ from .output import (
 )
 @click.option(
     "--to", "to_ref",
-    help="Target commit reference for comparison",
+    help="Target commit reference for comparison (default: HEAD)",
 )
 @click.option(
     "--output", "-o",
@@ -50,6 +50,8 @@ def main(working: bool, from_ref: str | None, to_ref: str | None, output: str, s
     # Determine diff mode
     if from_ref:
         mode = DiffMode.COMMITS
+        if not to_ref:
+            to_ref = "HEAD"
     elif working:
         mode = DiffMode.WORKING
     else:

@@ -22,10 +22,15 @@ code-diff
 code-diff --working
 ```
 
-### Compare branches or commits
+### Compare current branch to another branch
 
 ```bash
-code-diff --from main --to HEAD
+code-diff --from main
+```
+
+### Compare specific commits
+
+```bash
 code-diff --from abc123 --to def456
 ```
 
