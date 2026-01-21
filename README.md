@@ -25,6 +25,12 @@ code-diff --working
 ### Compare current branch to another branch
 
 ```bash
+code-diff --to main
+```
+
+### Compare another branch to current branch
+
+```bash
 code-diff --from main
 ```
 

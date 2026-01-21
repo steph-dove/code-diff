@@ -25,7 +25,7 @@ from .output import (
 )
 @click.option(
     "--from", "from_ref",
-    help="Base commit reference for comparison",
+    help="Base commit reference for comparison (default: HEAD)",
 )
 @click.option(
     "--to", "to_ref",
@@ -48,8 +48,10 @@ def main(working: bool, from_ref: str | None, to_ref: str | None, output: str, s
     or --from/--to for commit comparisons.
     """
     # Determine diff mode
-    if from_ref:
+    if from_ref or to_ref:
         mode = DiffMode.COMMITS
+        if not from_ref:
+            from_ref = "HEAD"
         if not to_ref:
             to_ref = "HEAD"
     elif working:
