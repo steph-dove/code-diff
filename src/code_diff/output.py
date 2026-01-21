@@ -30,6 +30,8 @@ class FileOutput:
     path: str
     language: str | None
     status: str
+    added_lines: list[int]
+    deleted_lines: list[int]
     changes: list[ChangeOutput]
 
 
@@ -67,6 +69,8 @@ def create_file_output(
         path=str(file_change.path),
         language=language,
         status=file_change.status.value,
+        added_lines=sorted(file_change.added_line_numbers),
+        deleted_lines=sorted(file_change.deleted_line_numbers),
         changes=[create_change_output(node) for node in ast_nodes],
     )
 
